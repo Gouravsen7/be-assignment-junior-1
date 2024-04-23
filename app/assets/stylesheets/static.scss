@@ -185,6 +185,10 @@
   margin-left: 24px;
 }
 
+.expenses-list h1 {
+  text-align: center;
+}
+
 .you-details p:nth-child(1) {
   font-size: 12px;
   line-height: 15px;
@@ -197,4 +201,29 @@
   font-weight: bold;
   margin: 0;
 }
+/* Style for the scrollable checkbox list */
+.scrollable-checkbox-list {
+  max-height: 200px; /* Set the maximum height to enable scrolling */
+  overflow-y: auto; /* Enable vertical scrollbar if needed */
+  border: 1px solid #ccc; /* Optional: Add border for styling */
+  padding: 10px; /* Optional: Add padding for spacing */
+}
+
+.scrollable-checkbox-list label {
+  display: block; /* Display each checkbox on a new line */
+}
+
+/* Style for the friend amount input fields */
+.friend-amount-input {
+  margin-top: 10px; /* Add some space between each friend's input field */
+}
+
+.friend-amount-input label {
+  display: block; /* Display the label on a new line */
+}
+
+.friend-amount-input input {
+  width: 100%; /* Make the input field fill its container */
+}
+
 /* Custom dashboard styles ends */

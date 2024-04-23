@@ -22,7 +22,7 @@
 - Devise installed and `User` model is added. Sign in and Sign up pages have been setup.
 - Routes and layouts for following page have been added.
   - Dashboard - This will be the root page.
-  - Friend page - `/people/:id`
+  - Friend page - `static/people/:id`
 
 
 ## Submission

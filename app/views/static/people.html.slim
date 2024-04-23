@@ -1,0 +1,39 @@
+.dashboard-wrapper
+  aside.side-bar-area
+    .friends-list
+      p.friends-list-header FRIENDS
+      - @friends.each do |friend|
+        a.friend-name href="/static/people/#{friend.id}" = friend.name
+  .main-area
+    .top-bar
+      h1.top-bar-title Dashboard
+      .top-bar-actions
+        button.btn.btn-primary type="button" data-bs-toggle="modal" data-bs-target="#expenseModal"  Add an expense
+        button.btn.btn-secondary type="button"  Settle up
+    .expenses-list
+      - if @expenses.present?
+        - @expenses.each do |expense|
+          - expense.shared_expenses.each do |shared_expenses|
+            .expense-item
+              .item-lhs
+                p= expense.created_at.strftime("%B %d")
+                p= expense.description
+              .item-rhs
+                .you-details
+                  p you paid
+                  p= expense.amount
+                .you-details
+                  p you lent #{shared_expenses.share_by_user.name}
+                  p= shared_expenses.amount
+      - else
+        h1  No expense present
+#expenseModal.modal.fade aria-hidden="true" aria-labelledby="expenseModalLabel" tabindex="-1"
+  .modal-dialog
+    .modal-content
+      .modal-header
+        h5#expenseModalLabel.modal-title Add an expense
+        button.btn-close aria-label="Close" data-bs-dismiss="modal" type="button"
+      .modal-body
+         = render 'expenses/expense_form', expense: @expense
+      .modal-footer
+        = button_tag 'Close', class: 'btn btn-secondary', type: 'button', data: { bs_dismiss: 'modal' }

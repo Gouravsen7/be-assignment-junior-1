@@ -2,8 +2,8 @@
   aside.side-bar-area
     .friends-list
       p.friends-list-header FRIENDS
-      a.friend-name anbu
-      a.friend-name barath
+      - @friends.each do |friend|
+        a.friend-name href="/static/people/#{friend.id}" = friend.name
   .main-area
     .top-bar
       h1.top-bar-title Dashboard
@@ -13,48 +13,47 @@
 
     .dashboard-balances
       .balances-bar
+        - owed_amount = current_user.owed_expenses
+        - owe_amount = current_user.owe_expenses
         .balance-block
           p total balance
-          p + $11.50
+          = (owed_amount - owe_amount).round(2)
         .balance-block
           p you owe
-          p $0.00
+          = owe_amount
         .balance-block
           p you are owed
-          p $11.50
+          = owed_amount
       .dashboard-detail
         .detail-block
           h2.detail-title you owe
-          .user-detail
-            img.user-img alt="profile" src="https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png" /
-            .user-info
-              p anbu
-              p owes you $11.50
-          .user-detail
-            img.user-img alt="profile" src="https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png" /
-            .user-info
-              p anbu
-              p owes you $11.50
+          - if @you_owe_user.present?
+            .user-detail
+              - @you_owe_user.each do |id, amount|
+                img.user-img alt="profile" src="https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png" /
+                .user-info
+                  p= id.second
+                  p owes you #{amount}
+          - else
+            h2 You owes nothing
         .detail-block
           h2.detail-title you are owed
-          .user-detail
-            img.user-img alt="profile" src="https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png" /
-            .user-info
-              p anbu
-              p owes you $11.50
-          .user-detail
-            img.user-img alt="profile" src="https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png" /
-            .user-info
-              p anbu
-              p owes you $11.50
-#expenseModal.modal.fade aria-hidden="true" aria-labelledby="expenseModalLabel" tabindex="-1" 
+          - if @you_are_owed_user.present?
+            .user-detail
+              - @you_are_owed_user.each do |id, amount|
+                img.user-img alt="profile" src="https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png" /
+                .user-info
+                  p= id.second
+                  p owes you #{amount}
+          - else
+            h2 You owed nothing
+#expenseModal.modal.fade aria-hidden="true" aria-labelledby="expenseModalLabel" tabindex="-1"
   .modal-dialog
     .modal-content
       .modal-header
         h5#expenseModalLabel.modal-title Add an expense
-        button.btn-close aria-label="Close" data-bs-dismiss="modal" type="button" 
+        button.btn-close aria-label="Close" data-bs-dismiss="modal" type="button"
       .modal-body
-        | Fields to be added
+        = render 'expenses/expense_form', expense: @expense
       .modal-footer
-        button.btn.btn-secondary data-bs-dismiss="modal" type="button"  Close
-        button.btn.btn-primary type="button"  Save changes
+        = button_tag 'Close', class: 'btn btn-secondary', type: 'button', data: { bs_dismiss: 'modal' }

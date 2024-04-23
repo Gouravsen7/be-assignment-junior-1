@@ -1,0 +1,10 @@
+.friends_container
+  .text-center
+    h1.h3.mb-3.fw-normal Add Friend
+
+    = simple_form_for @friend, html: { class: "ulsa-login-form", autocomplete: "off" } do |f|
+      .form-group.mb-4
+        = f.label :friend_id, "Select Friend's"
+        = f.collection_select :friend_id, current_user.not_friends_with_me, :id, :email, { }, { class: "form-control", multiple: true, id: "friend_select" }
+
+      = f.button :submit, "Add Friend", class: "w-100 btn btn-lg btn-primary", data: { class_name: 'ulsa-submit-form', button_name: "submit" }

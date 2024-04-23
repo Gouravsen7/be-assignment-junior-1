@@ -1,0 +1,39 @@
+        - @friends_with_current_user = @friends.to_a.prepend(current_user).map { |friend| [friend == current_user ? 'You' : friend.name, friend.id] }
+        = simple_form_for @expense, url: expenses_path, html: { class: "ulsa-login-form", autocomplete: "off" } do |f|
+          - if @expense.errors.any?
+              .alert.alert-danger
+                ul
+                  - @expense.errors.full_messages.each do |message|
+                    li= message
+          .form-group.mb-3
+            = f.input :amount, as: :string, label: 'Amount', input_html: { class: "form-control" }
+          .form-group.mb-3
+            = f.input :description, as: :text, label: 'Description', input_html: { class: "form-control"}
+          .form-group.mb-3
+            = f.input :paid_by, label: 'Paid By', collection: @friends_with_current_user, prompt: "Select User", input_html: { class: "form-control" }
+          .form-group.mb-3
+            label
+              input#equallyCheckbox(type='checkbox' name='equallyCheckbox')
+              | Equally
+            label
+              input#unequallyCheckbox(type='checkbox' name='unequallyCheckbox')
+              | Unequally
+          .equally-fields(style='display:none;')
+            .form-group.mb-3
+              = f.input :shared_user_ids, label: 'Share with', collection: @friends_with_current_user, input_html: { class: "form-control", multiple: true }
+          .unequally-fields(style='display:none;')
+            .form-group.mb-3
+              = label_tag 'selected_friends', 'Share with:'
+              .scrollable-checkbox-list
+                .checkbox-list
+                  - @friends_with_current_user.each do |friend|
+                    label
+                    = check_box_tag "shared_user_ids[]", friend.second, nil, class: 'friend-checkbox'
+                    = friend.first
+                    .friend-amount-input id="friend_amount_input_#{friend.second}" style="display: none;"
+                      .form-group.mb-3
+                        label= friend.first
+                        = text_field_tag "shared_user_amounts[#{friend.second}]", nil, class: "form-control friend-amount", type: "number", placeholder: "Enter amount for #{friend.first}"
+
+          .form-group.mb-3
+            = f.submit 'Save changes', class: 'btn btn-primary', id: 'saveButton'
